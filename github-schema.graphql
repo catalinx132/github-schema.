@@ -1,0 +1,3267 @@
+# Tipul de intrare autogenerat al AddComment
+input AddCommentInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul nodului subiectului de modificat.
+  subjectId: ID!
+
+  # Conținutul comentariului.
+  body: String!
+}
+
+# Tipul autogenerat returnat de AddComment
+type AddCommentPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Marginea legăturii de comentariu a subiectului.
+  commentEdge: IssueCommentEdge!
+
+  # Subiectul
+  subject: Node!
+
+  # Marginea de la conexiunea cronologică a subiectului.
+  timelineEdge: IssueEventTypesEdge!
+}
+
+# Tipul de intrare autogenerat al AddProjectCard
+input AddProjectCardInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul nodului ProjectColumn.
+  projectColumnId: ID!
+
+  # Conținutul cardului. Trebuie să fie membru al uniunii ProjectCardItem
+  contentId: ID
+
+  # Nota de pe card.
+  note: String
+}
+
+# Tipul de returnare autogenerat al AddProjectCard
+type AddProjectCardPayload {
+  # Marginea conexiunii de card ProjectColumn.
+  cardEdge: ProjectCardEdge!
+
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Coloana Proiectului
+  projectColumn: Project!
+}
+
+# Tipul de intrare autogenerat al AddProjectColumn
+input AddProjectColumnInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul nodului proiectului.
+  projectId: ID!
+
+  # Numele coloanei.
+  name: String!
+}
+
+# Tipul de returnare autogenerat al AddProjectColumn
+type AddProjectColumnPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Marginea conexiunii coloanei proiectului.
+  columnEdge: ProjectColumnEdge!
+
+  # Proiectul
+  project: Project!
+}
+
+# Tipul de intrare autogenerat al AddReaction
+input AddReactionInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul nodului subiectului de modificat.
+  subjectId: ID!
+
+  # Numele emojiului cu care să reacționeze.
+  content: ReactionContent!
+}
+
+# Tipul de returnare autogenerat al AddReaction
+type AddReactionPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Obiectul de reacție.
+  reaction: Reaction!
+}
+
+# Reprezintă un eveniment „atribuit” pentru o anumit issue sau pull request.
+type AssignedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică repository asociat evenimentului.
+  repository: Repository!
+
+  # Identifică utilizatorul care a efectuat evenimentul „atribuit”.
+  subject: User!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Specifică un autor pentru filtrarea commiturilor Git.
+input Author {
+  # ID-ul unui utilizator după care se filtrează. Dacă nu este nulă, se angajează numai autorul acestui utilizator
+  # va fi returnat. Acest câmp are prioritate față de e-mailuri.
+  id: ID
+
+  # Adrese de e-mail de filtrat după. Comitetele autorizate de oricare dintre adresele de e-mail specificate vor fi returnate.
+  emails: [String!]
+}
+
+# Reprezintă un eveniment „base_ref_force_push” la o cerere de pullRequest dat.
+type BaseRefForcePushedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică SHA de commit după evenimentul „base_ref_force_push”.
+  afterCommit: Commit!
+
+  # Identifică SHA de commit înainte pentru evenimentul „base_ref_force_push”.
+  beforeCommit: Commit!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică numele de referință complet calificat pentru evenimentul „base_ref_force_push”.
+  ref: Ref
+
+  # Identifies the repository associated with the event.
+  repository: Repository!
+
+  # Identifică repository ul asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un blob Git.
+type Blob implements Node, GitObject {
+  # Dimensiunea octeților obiectului Blob
+  byteSize: Int!
+  id: ID!
+
+  # Indică dacă Blob-ul este binar sau text
+  isBinary: Boolean!
+
+  # ID-ul obiectului Git
+  oid: GitObjectID!
+
+  # Repository de care aparține obiectul Git
+  repository: Repository!
+}
+
+# Reprezintă un eveniment „închis” pentru un anumit issue sau un pullRequest.
+type ClosedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică angajamentul asociat evenimentului „închis”.
+  commit: Commit
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică repository ul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+#Reprezintă un commit Git.
+type Commit implements Node, GitObject {
+  #Detalii de autor despre comitere.
+  author: GitActor
+
+  # Comentarii făcute la comitere.
+  comments(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): CommitCommentConnection!
+
+  # Committership detalii despre un commit.
+  committer: GitActor
+
+  # Istoricul de confirmare liniară începând de la (și incluzând) acest commit, în aceeași ordine ca `git log`.
+  history(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Dacă nu este nul, filtrează istoricul pentru a afișa numai fișierele care ating comitetele de pe această cale.
+    path: String
+
+    # Dacă nu este nul, filtrează istoricul pentru a afișa comitetele numai cu autor de potrivire.
+    author: Author
+
+    # Permite specificarea unei ore sau date de început pentru preluarea comiterilor.
+    since: GitTimestamp
+
+    # Permite specificarea unei ore sau a unei date de încheiere pentru preluarea comiterilor.
+    until: GitTimestamp
+  ): CommitHistoryConnection!
+  id: ID!
+
+  # Mesajul de comitere Git
+  message: String!
+
+  # Corpul mesajului Git commit
+  messageBody: String!
+
+  # Corpul mesajului de confirmare redat la HTML.
+  messageBodyHTML: HTML!
+
+  # Titlul mesajului de comitere Git
+  messageHeadline: String!
+
+  # Titlul mesajului de confirmare redat la HTML.
+  messageHeadlineHTML: HTML!
+
+  # ID-ul obiectului Git
+  oid: GitObjectID!
+
+  # Depozitul de care aparține acest commit
+  repository: Repository!
+
+  # Informații de semnare a angajamentului, dacă sunt prezente.
+  signature: GitSignature
+
+  # informații de stare pentru acest commit
+  status: Status
+
+  # Arborele rădăcinii Commit
+  tree: Tree!
+
+  # ID-ul canalului de portal web pentru actualizări live.
+  websocket: String!
+}
+
+# Reprezintă un comentariu la un anumit angajament.
+type CommitComment implements Node, Reactable {
+  # Identifică corpul comentariului.
+  body: String!
+
+  #Identifică comiterea asociată comentariului.
+  commit: Commit!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Sunt activate actualizările live de reacție pentru acest subiect.
+  liveReactionUpdatesEnabled: Boolean!
+
+  # Identifică calea fișierului asociată comentariului.
+  path: String
+
+  # Identifică poziția de linie asociată comentariului.
+  position: Int
+
+  # O listă de reacții grupate după conținutul rămas pe subiect.
+  reactionGroups: [ReactionGroup!]
+
+  # O listă de reacții rămase pe isuue.
+  reactions(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea reacțiilor prin emoji.
+    content: ReactionContent
+
+    # Permite specificarea ordinii în care reacțiile sunt returnate.
+    orderBy: ReactionOrder
+  ): ReactionConnection!
+
+  # ID-ul canalului de portal web pentru actualizări live de reacție.
+  reactionsWebsocket: String!
+
+  # Identifică depozitul asociat comentariului.
+  repository: Repository!
+
+  # Identifică utilizatorul care a creat comentariul.
+  user: User!
+
+  # Utilizatorul poate reacționa la acest subiect
+  viewerCanReact: Boolean!
+}
+
+type CommitCommentConnection {
+  edges: [CommitCommentEdge]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type CommitCommentEdge {
+  cursor: String!
+  node: CommitComment
+}
+
+type CommitEdge {
+  cursor: String!
+  node: Commit
+}
+
+type CommitHistoryConnection {
+  edges: [CommitEdge]
+  pageInfo: PageInfo!
+  path: String
+}
+
+# Tipul de intrare autogenerat al CreateProject
+input CreateProjectInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul proprietarului pentru a crea proiectul.
+  ownerId: ID!
+
+  # Numele proiectului.
+  name: String!
+
+  # Descrierea proiectului.
+  body: String
+}
+
+# Tipul de returnare autogenerat al CreateProject
+type CreateProjectPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Noul proiect.
+  project: Project!
+}
+
+# Un șir de dată UTC codificat ISO-8601.
+scalar DateTime
+
+# Tipul de intrare autogenerat al DeleteProjectCard
+input DeleteProjectCardInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul cardului de șters.
+  cardId: ID!
+}
+
+# Tipul de returnare autogenerat al DeleteProjectCard
+type DeleteProjectCardPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Coloana în care se afla cardul șters.
+  column: ProjectColumn!
+
+  # ID-ul cardului șters.
+  deletedCardId: ID!
+}
+
+# Tipul de intrare autogenerat al DeleteProjectColumn
+input DeleteProjectColumnInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul coloanei de șters.
+  columnId: ID!
+}
+
+# Tipul returnat autogenerat al DeleteProjectColumn
+type DeleteProjectColumnPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul coloanei șterse.
+  deletedColumnId: ID!
+
+  # Proiectul în care se afla coloana ștearsă.
+  project: Project!
+}
+
+# Tipul de intrare autogenerat al DeleteProject
+input DeleteProjectInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul proiectului de actualizat.
+  projectId: ID!
+}
+
+# Tipul de returnare autogenerat al DeleteProject
+type DeleteProjectPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Depozitul din care a fost eliminat proiectul.
+  owner: ProjectOwner!
+}
+
+# Reprezintă un eveniment „demilestoned” pentru o anumit issue sau cerere de pullRequest.
+type DemilestonedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică titlul de referință asociat evenimentului „demilestoned”.
+  milestoneTitle: String!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „implementat” pentru o anumit issue sau o cerere de pullRequest.
+type DeployedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+
+  # Implementarea asociată cu evenimentul „implementat”.
+  deployment: Deployment!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Ref. Asociat evenimentului „implementat”.
+  ref: Ref
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă instanța de implementare declanșată.
+type Deployment implements Node {
+  # Identifică angajamentul de implementare.
+  commit: Commit!
+
+  # Identifică momentul în care a fost creată implementarea.
+  createdAt: DateTime!
+
+  # Identifică utilizatorul care a declanșat implementarea.
+  creator: User!
+  id: ID!
+
+  # Identifică repository asociat cu implementarea.
+  repository: Repository!
+
+  # O listă a stărilor asociate implementării.
+  statuses(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): DeploymentStatusConnection
+}
+
+# Stările de implementare posibile.
+enum DeploymentState {
+  # Implementarea este în așteptare.
+  PENDING
+
+  # Implementarea a avut succes.
+  SUCCESS
+
+  # Implementarea a eșuat.
+  FAILURE
+
+  # Implementarea este inactivă.
+  INACTIVE
+
+  # Implementarea a întâmpinat o eroare.
+  ERROR
+}
+
+# Descrie starea unei încercări de implementare date.
+type DeploymentStatus implements Node {
+  # Identifică utilizatorul care a declanșat implementarea.
+  creator: User!
+
+  # Identifică implementarea asociată cu starea.
+  deployment: Deployment!
+
+  # Identifică descrierea implementării.
+  description: String
+
+  # Identifică adresa de mediu a implementării.
+  environmentUrl: String
+  id: ID!
+
+  # Identifică adresa URL a jurnalului implementării.
+  logUrl: String
+
+  # Identifică starea actuală a implementării.
+  state: DeploymentState!
+}
+
+type DeploymentStatusConnection {
+  edges: [DeploymentStatusEdge]
+  pageInfo: PageInfo!
+}
+
+type DeploymentStatusEdge {
+  cursor: String!
+  node: DeploymentStatus
+}
+
+# Reprezintă un actor într-un commit Git (adică un autor sau un comitter).
+type GitActor {
+  # Marcajul de timp al acțiunii Git (autor sau comiterea).
+  date: GitTimestamp
+
+  # E-mailul din commitul Git.
+  email: String
+
+  # Numele din commit ul  Git.
+  name: String
+
+  # Utilizatorul GitHub corespunzător câmpului de e-mail. Nul dacă nu există un astfel de utilizator.
+  user: User
+}
+
+# Reprezintă un obiect Git.
+interface GitObject {
+  id: ID!
+
+  # ID-ul obiectului Git
+  oid: GitObjectID!
+
+  # Repository de care aparține obiectul Git
+  repository: Repository!
+}
+
+# Un ID obiect Git.
+scalar GitObjectID
+
+# Informații despre o semnătură (GPG sau S / MIME) pe un commit sau etichetă.
+interface GitSignature {
+  # E-mail folosit pentru semnarea acestui obiect.
+  email: String!
+
+  # Adevărat dacă semnătura este validă și verificată de GitHub.
+  isValid: Boolean!
+
+  # Sarcină utilă pentru obiectul de semnare GPG. Obiect ODB brut fără antetul semnăturii.
+  payload: String!
+
+  # Antet de semnătură blindat ASCII din obiect.
+  signature: String!
+
+  # Utilizator GitHub corespunzător e-mailului care semnează acest commit.
+  signer: User
+
+  # Starea acestei semnături. „VALABIL” dacă semnătura este validă și verificată de
+  # GitHub, altfel reprezintă motivul pentru care semnătura este considerată invalidă.
+  state: GitSignatureState!
+}
+
+# Starea unei semnături Git.
+enum GitSignatureState {
+  # Semnătură validă și verificată de GitHub
+  VALID
+
+  # Semnătură nevalidă.
+  INVALID
+
+  # Semnătură malformată.
+  MALFORMED_SIG
+
+  # Cheia utilizată pentru semnare nu este cunoscută de GitHub.
+  UNKNOWN_KEY
+
+  # E-mail nevalid utilizat pentru semnare.
+  BAD_EMAIL
+
+  # E-mail utilizat pentru semnarea neconfirmat pe GitHub.
+  UNVERIFIED_EMAIL
+
+  # E-mailul utilizat pentru semnare nu este cunoscut de GitHub.
+  NO_USER
+
+  # Tipul de semnătură necunoscut.
+  UNKNOWN_SIG_TYPE
+
+  # Nesemnat.
+  UNSIGNED
+
+  # Eroare internă - serviciul de verificare GPG nu este disponibil momentan.
+  GPGVERIFY_UNAVAILABLE
+
+  # Eroare internă - serviciul de verificare GPG s-a comportat greșit.
+  GPGVERIFY_ERROR
+
+  # Semnalizatoarele de utilizare pentru cheia care a semnat acest lucru nu permit semnarea.
+  NOT_SIGNING_KEY
+
+  # Cheia de semnare a expirat.
+  EXPIRED_KEY
+}
+
+# Un șir de date codificat ISO-8601. Spre deosebire de tipul DateTime, GitTimestamp nu este convertit în UTC.
+scalar GitTimestamp
+
+# Reprezintă o semnătură GPG pe un comitet sau o etichetă.
+type GpgSignature implements GitSignature {
+  # E-mail folosit pentru semnarea acestui obiect.
+  email: String!
+
+  # Adevărat dacă semnătura este validă și verificată de GitHub.
+  isValid: Boolean!
+
+  # ID codificat hexagonal al cheii care a semnat acest obiect.
+  keyId: String
+
+  # Sarcină utilă pentru obiectul de semnare GPG. Obiect ODB brut fără antetul semnăturii.
+  payload: String!
+
+  # Antet de semnătură blindat ASCII din obiect.
+  signature: String!
+
+  # Utilizator GitHub corespunzător e-mailului care semnează acest commit.
+  signer: User
+
+  # Starea acestei semnături. „VALID” dacă semnătura este validă și verificată de
+  # GitHub, altfel reprezintă motivul pentru care semnătura este considerată invalidă.
+  state: GitSignatureState!
+}
+
+# Reprezintă un eveniment „head_ref_deleted” la o cerere de pullRequest dată.
+type HeadRefDeletedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+
+  # Identifică referința asociată cu evenimentul `head_ref_deleted`.
+  headRef: Ref!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „head_ref_force_push” la o cerere de pullRequest dată.
+type HeadRefForcePushedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică SHA de commit după evenimentul „head_ref_force_push”.
+  afterCommit: Commit!
+
+  # Identifică SHA de commit înainte pentru evenimentul „head_ref_force_push”.
+  beforeCommit: Commit!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică numele de referință complet calificat pentru evenimentul „head_ref_force_push”.
+  ref: Ref
+
+  # Identifică Repository asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „head_ref_restored” la o cerere de pullRequest dată.
+type HeadRefRestoredEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică Repository asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Un șir care conține cod HTML.
+scalar HTML
+
+# O problemă este un loc pentru a discuta idei, îmbunătățiri, sarcini și erori pentru un proiect.
+type Issue implements Node, Reactable, Timeline {
+  # O listă de utilizatori alocați problemei.
+  assignees(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): UserConnection!
+
+  # Identifică autorul numărului.
+  author: User!
+
+  # Identifică corpul problemei.
+  body: String!
+
+  # O listă de comentarii asociate problemei.
+  comments(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    #Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): IssueCommentConnection!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # O listă de etichete asociate cu un issue.
+  labels(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): LabelConnection
+
+  # Actualizările live de reacție sunt activate pentru acest subiect.
+  liveReactionUpdatesEnabled: Boolean!
+
+  # Identifică obiectivul asociat problemei.
+  milestone: Milestone
+
+  # Identifică numărul problemei.
+  number: Int!
+
+  # O listă a utilizatorilor care participă la conversația problemei.
+  participants(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): UserConnection!
+
+  # O listă de reacții grupate după conținutul rămas pe subiect.
+  reactionGroups: [ReactionGroup!]
+
+  # O listă de reacții rămase pe problema.
+  reactions(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea reacțiilor prin emoji.
+    content: ReactionContent
+
+    # Permite specificarea ordinii în care reacțiile sunt returnate.
+    orderBy: ReactionOrder
+  ): ReactionConnection!
+
+  # ID-ul canalului de portal web pentru actualizări live de reacție.
+  reactionsWebsocket: String!
+
+  # Identifică depozitul asociat problemei.
+  repository: Repository!
+
+  # Identifică starea problemei.
+  state: IssueState!
+
+  # O listă de evenimente asociate cu o problemă sau PullRequest.
+  timeline(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea evenimentelor cronologiei după un timestamp `since`.
+    since: String
+  ): IssueEventTypesConnection
+
+  # Identifică titlul problemei.
+  title: String!
+
+  # Utilizatorul poate reacționa la acest subiect
+  viewerCanReact: Boolean!
+
+  # ID-ul canalului de portal web pentru actualizări live.
+  websocket(
+    # Canalul de utilizat.
+    channel: IssuePubSubTopic!
+  ): String!
+}
+
+# Reprezintă un comentariu la o problemă.
+type IssueComment implements Node, Reactable {
+  # Identifică autorul comentariului.
+  author: User!
+
+  # Identifică corpul comentariului.
+  body: String!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Identifică problema asociată comentariului.
+  issue: Issue!
+
+  # Actualizările live de reacție sunt activate pentru acest subiect.
+  liveReactionUpdatesEnabled: Boolean!
+
+  # O listă de reacții grupate după conținutul rămas pe subiect.
+  reactionGroups: [ReactionGroup!]
+
+  # O listă de reacții rămase pe problema.
+  reactions(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea reacțiilor prin emoji.
+    content: ReactionContent
+
+    # Permite specificarea ordinii în care reacțiile sunt returnate.
+    orderBy: ReactionOrder
+  ): ReactionConnection!
+
+  # ID-ul canalului de portal web pentru actualizări live de reacție.
+  reactionsWebsocket: String!
+
+  # Depozitul asociat cu acest subiect de reacție.
+  repository: Repository! @deprecated(reason: "Future reaction subjects may not be scoped under repositories.")
+
+  # Utilizatorul poate reacționa la acest subiect
+  viewerCanReact: Boolean!
+
+  # ID-ul canalului de portal web pentru actualizări live.
+  websocket(
+    # Canalul de utilizat.
+    channel: IssuePubSubTopic!
+  ): String!
+}
+
+type IssueCommentConnection {
+  edges: [IssueCommentEdge]
+  pageInfo: PageInfo!
+}
+
+type IssueCommentEdge {
+  cursor: String!
+  node: IssueComment
+}
+
+# O listă de probleme care au fost deschise în legătură cu părintele.
+type IssueConnection {
+  edges: [IssueEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int
+}
+
+type IssueEdge {
+  cursor: String!
+  node: Issue
+}
+
+# Reprezintă un eveniment cu probleme.
+interface IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică repository ul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Posibilele tipuri de evenimente.
+enum IssueEventType {
+  # Emisiunea a fost atribuită actorului.
+  ASSIGNED
+
+  # Ramura de bază a fost împinsă forțat de actor.
+  BASE_REF_FORCE_PUSHED
+
+  # Problema a fost închisă de actor.
+  CLOSED
+
+  # Problema a avut o etapă importantă înlăturată.
+  DEMILESTONED
+
+  # Sucursala a fost desfășurată de actor.
+  DEPLOYED
+
+  # Ramura principală a fost ștearsă de actor.
+  HEAD_REF_DELETED
+
+  # Ramura capului a fost forțată de actor.
+  HEAD_REF_FORCE_PUSHED
+
+  # Ramura capului a fost restaurată de actor.
+  HEAD_REF_RESTORED
+
+  # O problemă a fost adăugată la o etichetă.
+  LABELED
+
+  # Problema a fost blocată de actor.
+  LOCKED
+
+  # Problema a fost blocată de actor.
+  MENTIONED
+
+  # Problema a fost fuzionată de actor.
+  MERGED
+
+  # Problemei i s-a adăugat un reper.
+  MILESTONED
+
+  # Problema a fost menționată dintr-un mesaj de confirmare.
+  REFERENCED
+
+  # Titlul numărului a fost schimbat.
+  RENAMED
+
+  # Problema a fost redeschisă de actor.
+  REOPENED
+
+  # pillrequest sau issue  a fost subscrisă de actor.
+  SUBSCRIBED
+
+  # Problema nu a fost atribuită actorului.
+  UNASSIGNED
+
+  # O etichetă a fost eliminată din problemă.
+  UNLABELED
+
+  # Problema a fost deblocată de actor.
+  UNLOCKED
+
+  # Solicitarea sau problema de extragere a fost dezabonată de la actor.
+  UNSUBSCRIBED
+}
+
+# Un element care poate returna diferite tipuri de evenimente și comentarii.
+union IssueEventTypes = PullRequestReview | PullRequestReviewThread | PullRequestReviewComment | IssueComment | ClosedEvent | ReopenedEvent | SubscribedEvent | UnsubscribedEvent | MergedEvent | ReferencedEvent | MentionedEvent | AssignedEvent | UnassignedEvent | LabeledEvent | UnlabeledEvent | MilestonedEvent | DemilestonedEvent | RenamedEvent | LockedEvent | UnlockedEvent | DeployedEvent | HeadRefDeletedEvent | HeadRefRestoredEvent | HeadRefForcePushedEvent | BaseRefForcePushedEvent | Commit
+
+type IssueEventTypesConnection {
+  edges: [IssueEventTypesEdge]
+  pageInfo: PageInfo!
+}
+
+type IssueEventTypesEdge {
+  cursor: String!
+  node: IssueEventTypes
+}
+
+# Posibilele canale PubSub pentru o problemă.
+enum IssuePubSubTopic {
+  # ID-ul canalului pentru observarea actualizărilor problemelor.
+  UPDATED
+
+  # ID-ul canalului pentru marcarea unei probleme ca citită.
+  MARKASREAD
+}
+
+# Stările posibile ale unei probleme.
+enum IssueState {
+  # O problemă care este încă deschisă
+  OPEN
+
+  # O problemă care a fost închisă
+  CLOSED
+}
+
+# etichetă pentru clasificarea problemelor sau repere cu un anumit repository.
+type Label implements Node {
+  # Identifică culoarea etichetei.
+  color: String!
+  id: ID!
+
+  # Identifică numele etichetei.
+  name: String!
+
+  # Depozitul asociat cu această etichetă.
+  repository: Repository!
+}
+
+type LabelConnection {
+  edges: [LabelEdge]
+  pageInfo: PageInfo!
+}
+
+# Reprezintă un eveniment „etichetat” pentru o anumită problemă sau un pullRequest.
+type LabeledEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică eticheta asociată evenimentului „etichetat”.
+  label: Label!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+type LabelEdge {
+  cursor: String!
+  node: Label
+}
+
+# Reprezintă un eveniment „blocat” pentru o anumită problemă sau un pullRequest.
+type LockedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „menționat” pentru o anumită problemă sau o cerere de pullRequest.
+type MentionedEvent implements Node, IssueEvent {
+  # identifica actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+  #Identifică tipul de eveniment asociat evenimentului.
+
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „fuzionat” la o cerere de pullRequest dată.
+type MergedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică commit-ul asociat evenimentului `merge`.
+  commit: Commit!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică ref-ul asociat evenimentului `merge`.
+  mergeRef: Ref!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un obiect Milestone pe un repository dat.
+type Milestone implements Node {
+  # Identifică numărul de probleme închise în prezent în această etapă.
+  closedIssueCount: Int!
+
+  # Identifică creatorul reperului.
+  createdBy: User!
+
+  # Identifică descrierea reperului.
+  description: String
+
+  # Identifică data scadenței etapei de referință.
+  dueOn: DateTime
+  id: ID!
+
+  # Identifică numărul de probleme deschise în prezent în această etapă.
+  openIssueCount: Int!
+
+  # Depozitul asociat cu această etapă.
+  repository: Repository!
+
+  # Identifică starea etapei de referință.
+  state: MilestoneState!
+
+  # Identifică titlul reperului.
+  title: String!
+}
+
+type MilestoneConnection {
+  edges: [MilestoneEdge]
+  pageInfo: PageInfo!
+}
+
+# Reprezintă un eveniment „milestoned” pentru o anumită problemă sau cerere de pullRequest.
+type MilestonedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică titlul de referință asociat evenimentului „milestoned”.
+  milestoneTitle: String!
+
+  # Identifică repository asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+type MilestoneEdge {
+  cursor: String!
+  node: Milestone
+}
+
+  # Stările posibile ale unui reper.
+enum MilestoneState {
+  # O etapă care este încă deschisă.
+  OPEN
+
+  # O etapă care a fost închisă.
+  CLOSED
+}
+
+# Tipul de intrare autogenerat al MoveProjectCard
+input MoveProjectCardInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul cărții de mutat.
+  cardId: ID!
+
+  # ID-ul coloanei în care să o mutați.
+  columnId: ID!
+
+  # Plasați noul card după cardul cu acest ID. Treceți nul pentru ao plasa în partea de sus.
+  afterCardId: ID
+}
+
+# Tipul de returnare autogenerat al MoveProjectCard
+type MoveProjectCardPayload {
+  # Noua margine a cărții mutate.
+  cardEdge: ProjectCardEdge!
+
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+}
+
+# Tipul de intrare autogenerat al MoveProjectColumn
+input MoveProjectColumnInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul coloanei de mutat.
+  columnId: ID!
+
+  # Plasați noua coloană după coloana cu acest ID. Treceți nul pentru a-l plasa în față.
+  afterColumnId: ID
+}
+
+# Tipul de returnare autogenerat al MoveProjectColumn
+type MoveProjectColumnPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Noua margine a coloanei mutate.
+  columnEdge: ProjectColumnEdge!
+}
+
+# Interogarea rădăcină pentru implementarea mutațiilor GraphQL.
+type Mutation {
+  # Adaugă un comentariu la o problemă sau o cerere de pullRequest.
+  addComment(input: AddCommentInput!): AddCommentPayload
+
+  # Adaugă un card la un ProjectColumn. Trebuie furnizate fie „contentId”, fie „note”, dar ** nu ** ambele.
+  addProjectCard(input: AddProjectCardInput!): AddProjectCardPayload
+
+  # Adaugă o coloană la un proiect.
+  addProjectColumn(input: AddProjectColumnInput!): AddProjectColumnPayload
+
+  # Adaugă o reacție la un subiect.
+  addReaction(input: AddReactionInput!): AddReactionPayload
+
+  # Creează un nou proiect.
+  createProject(input: CreateProjectInput!): CreateProjectPayload
+
+  # Șterge un proiect.
+  deleteProject(input: DeleteProjectInput!): DeleteProjectPayload
+
+  #Șterge un card de proiect.
+  deleteProjectCard(input: DeleteProjectCardInput!): DeleteProjectCardPayload
+
+  # Șterge o coloană de proiect.
+  deleteProjectColumn(input: DeleteProjectColumnInput!): DeleteProjectColumnPayload
+
+  # Mută ​​un card de proiect într-un alt loc.
+  moveProjectCard(input: MoveProjectCardInput!): MoveProjectCardPayload
+
+  # # Mută ​​o coloană de proiect într-un alt loc.
+  moveProjectColumn(input: MoveProjectColumnInput!): MoveProjectColumnPayload
+
+  # Elimină o reacție de la un subiect.
+  removeReaction(input: RemoveReactionInput!): RemoveReactionPayload
+
+  # Actualizează un proiect existent.
+  updateProject(input: UpdateProjectInput!): UpdateProjectPayload
+
+  # Actualizează un card de proiect existent.
+  updateProjectCard(input: UpdateProjectCardInput!): UpdateProjectCardPayload
+
+  # Actualizează o coloană de proiect existentă.
+  updateProjectColumn(input: UpdateProjectColumnInput!): UpdateProjectColumnPayload
+
+  # Actualizează starea abonamentului repository ul de spectatori.
+  updateSubscription(input: UpdateSubscriptionInput!): UpdateSubscriptionPayload
+}
+
+interface Node {
+  id: ID!
+}
+
+# Reprezintă o aplicație OAuth
+type OauthApplication {
+  # O adresă URL care indică sigla aplicației.
+  logoURL(
+    # Dimensiunea imaginii pătrate rezultate.
+    size: Int
+  ): String!
+
+  # Numele aplicației.
+  name: String
+
+  # Adresa URL a paginii de pornire a aplicației.
+  url: String
+
+  # Utilizatorul asociat cu această aplicație.
+  user: User
+}
+
+# Direcții posibile în care să comandați o listă de articole atunci când este furnizat un argument „orderBy”.
+enum OrderDirection {
+  # Specifică o ordine crescătoare pentru un anumit argument `orderBy`.
+  ASC
+
+  # Specifică o ordine descrescătoare pentru un anumit argument `orderBy`.
+  DESC
+}
+
+# Un cont pe GitHub, cu unul sau mai mulți proprietari, care are repository, membri și echipe.
+type Organization implements Node, RepositoryOwner {
+  # O adresă URL care indică avatarul public al organizației.
+  avatarURL(
+    # Dimensiunea imaginii pătrate rezultate.
+    size: Int
+  ): String!
+  id: ID!
+
+  # Numele de utilizator utilizat pentru autentificare.
+  login: String!
+
+  # Numele profilului public al organizațiilor.
+  name: String!
+
+  # O listă de repository pe care le deține utilizatorul.
+  repositories(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): RepositoryConnection!
+
+  # Găsiți depozitul.
+  repository(
+    # Numele depozitului de găsit.
+    name: String!
+  ): Repository
+}
+
+# O listă a organizațiilor care sunt conectate la părinte.
+type OrganizationConnection {
+  edges: [OrganizationEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int
+}
+
+type OrganizationEdge {
+  cursor: String!
+  node: Organization
+}
+
+  # Metadate despre o conexiune
+type PageInfo {
+  # Când paginați înainte, cursorul să continue
+  endCursor: String
+
+  # Indică dacă există mai multe pagini de preluat
+  hasNextPage: Boolean!
+
+  # Indică dacă există pagini înainte de pagina curentă
+  hasPreviousPage: Boolean!
+
+  # Când paginați înapoi, cursorul pentru a continua
+  startCursor: String
+}
+
+# Proiectele gestionează problemele și atrag cererile într-un repository.
+type Project implements Node {
+  # Corpul de descriere al proiectului.
+  body: String
+
+  # Lista coloanelor din proiect
+  columns(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): ProjectColumnConnection!
+
+  # Când a fost creat acest proiect.
+  createdAt: DateTime!
+
+  # Utilizatorul care a creat inițial proiectul.
+  creator: User!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Numele proiectului.
+  name: String!
+
+  # Numărul proiectului.
+  number: Int!
+
+  # Proprietarul proiectului. În prezent limitat la depozite.
+  owner: ProjectOwner!
+
+  # Când a fost actualizat ultima dată acest proiect.
+  updatedAt: DateTime!
+}
+
+# Un card într-un proiect.
+type ProjectCard implements Node {
+  # Elementul conținutului cardului
+  content: ProjectCardItem
+
+  # Când a fost creată această carte.
+  createdAt: DateTime!
+
+  # Utilizatorul care a creat acest card
+  creator: User!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Nota cardului
+  note: String
+
+  # Coloana care conține acest card.
+  projectColumn: ProjectColumn!
+
+  # Starea ProjectCard
+  state: ProjectCardState
+
+  # Când a fost actualizată ultima dată acest card.
+  updatedAt: DateTime!
+}
+
+type ProjectCardConnection {
+  edges: [ProjectCardEdge]
+  pageInfo: PageInfo!
+}
+
+type ProjectCardEdge {
+  cursor: String!
+  node: ProjectCard
+}
+
+# Tipuri care pot fi incluse în cardurile de proiect.
+union ProjectCardItem = Issue | PullRequest
+
+# Diverse stări de conținut ale unui ProjectCard
+enum ProjectCardState {
+  # Cardul are numai conținut.
+  CONTENT_ONLY
+
+  # Cardul are doar o notă.
+  NOTE_ONLY
+
+  # Cartea este redactată.
+  REDACTED
+}
+
+# O coloană din interiorul unui proiect.
+type ProjectColumn implements Node {
+  # Lista cărților din coloană
+  cards(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): ProjectCardConnection!
+
+  # Când a fost creată această coloană.
+  createdAt: DateTime!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Numele coloanei proiectului.
+  name: String!
+
+  # Proiectul care conține această coloană.
+  project: Project!
+
+  # La ultima actualizare a acestei coloane.
+  updatedAt: DateTime!
+}
+
+type ProjectColumnConnection {
+  edges: [ProjectColumnEdge]
+  pageInfo: PageInfo!
+}
+
+type ProjectColumnEdge {
+  cursor: String!
+  node: ProjectColumn
+}
+
+type ProjectConnection {
+  edges: [ProjectEdge]
+  pageInfo: PageInfo!
+}
+
+type ProjectEdge {
+  cursor: String!
+  node: Project
+}
+
+# Reprezintă un proprietar al unui proiect.
+interface ProjectOwner {
+  id: ID!
+
+  # Găsiți proiectul după număr.
+  project(
+    # Numărul proiectului de găsit.
+    number: Int!
+  ): Project
+
+  # O listă de proiecte sub proprietar.
+  projects(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): ProjectConnection
+
+  # Poate vizualizatorul actual să creeze proiecte noi pentru acest proprietar.
+  viewerCanCreateProjects: Boolean!
+}
+
+#  repository pull request.
+type PullRequest implements Node, Timeline {
+  # Utilizatorul asociat cu această cerere de pullRequest.
+  author: User!
+
+  # Identifică corpul cererii de pullRequest.
+  body: String!
+
+  # O listă de comentarii asociate cu solicitarea de pullRequest.
+  comments(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): IssueCommentConnection!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Identifică numărul cererii de pullRequest.
+  number: Int!
+
+  # The repository associated with this pull request.
+  repository: Repository!
+
+  # O listă de recenzii asociate cererii de pullRequest.
+  reviews(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): PullRequestReviewConnection
+
+  # Identifică starea cererii de pullRequest.
+  state: PullRequestState!
+
+  # A list of events associated with an Issue or PullRequest.
+  timeline(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea evenimentelor cronologiei după un timestamp `since`.
+    since: String
+  ): IssueEventTypesConnection
+
+  # Identifică titlul cererii de pullRequest.
+  title: String!
+
+  # ID-ul canalului de portal web pentru actualizări live.
+  websocket(
+    # Canalul de utilizat.
+    channel: PullRequestPubSubTopic!
+  ): String!
+}
+
+# O listă de cereri de pullRequest care au fost deschise în legătură cu părintele.
+type PullRequestConnection {
+  edges: [PullRequestEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int
+}
+
+type PullRequestEdge {
+  cursor: String!
+  node: PullRequest
+}
+
+# Posibilele canale PubSub pentru o cerere de pullRequest.
+enum PullRequestPubSubTopic {
+  # ID-ul canalului pentru observarea actualizărilor solicitării pull.
+  UPDATED
+
+  # ID-ul canalului pentru marcarea unei cereri de pullRequest ca citită.
+  MARKASREAD
+}
+
+#Un obiect de examinare pentru o anumită cerere de pullRequest.
+type PullRequestReview implements Node {
+  # Identifică autorul asociat cu această examinare a cererii de pullRequest.
+  author: User!
+
+  # Identifică corpul de examinare a cererii de pullRequest.
+  body: String
+
+  # O listă de comentarii pentru recenzia actuală a cererii de pullRequest.
+  comments(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): PullRequestReviewCommentConnection!
+
+  # Identifică angajamentul asociat cu această examinare a cererii de pullRequest.
+  head: Commit!
+  id: ID!
+
+  # Identifică cererea de pullRequest asociată cu această examinare a cererii de pullRequest.
+  pullRequest: PullRequest!
+
+  # Identifică starea actuală a examinării cererii de pullRequest.
+  state: String
+}
+
+# Un comentariu de examinare asociat cu o anumită cerere de pullRequest a depozitului.
+type PullRequestReviewComment implements Node, Reactable {
+  # Utilizatorul asociat cu acest comentariu de recenzie.
+  author: User!
+
+  # Corpul de comentarii al acestui comentariu de recenzie.
+  body: String!
+
+  # Identifică comiterea asociată comentariului.
+  commit: Commit!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Actualizările live de reacție sunt activate pentru acest subiect.
+  liveReactionUpdatesEnabled: Boolean!
+
+  # Indicele liniei din diferența la care se aplică comentariul.
+  position: Int!
+
+  # Solicitarea de extragere asociată cu acest comentariu de examinare.
+  pullRequest: PullRequest!
+
+  # O listă de reacții grupate după conținutul rămas pe subiect.
+  reactionGroups: [ReactionGroup!]
+
+  # O listă de reacții rămase pe problema.
+  reactions(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea reacțiilor prin emoji..
+    content: ReactionContent
+
+    # Permite specificarea ordinii în care reacțiile sunt returnate.
+    orderBy: ReactionOrder
+  ): ReactionConnection!
+
+  # ID-ul canalului de portal web pentru actualizări live de reacție.
+  reactionsWebsocket: String!
+
+  # Depozitul asociat cu această recenzie comentează.
+  repository: Repository!
+
+  # Utilizatorul poate reacționa la acest subiect
+  viewerCanReact: Boolean!
+
+  # ID-ul canalului de portal web pentru actualizări live.
+  websocket(
+    # Canalul de utilizat.
+    channel: PullRequestPubSubTopic!
+  ): String!
+}
+
+type PullRequestReviewCommentConnection {
+  edges: [PullRequestReviewCommentEdge]
+  pageInfo: PageInfo!
+}
+
+type PullRequestReviewCommentEdge {
+  cursor: String!
+  node: PullRequestReviewComment
+}
+
+type PullRequestReviewConnection {
+  edges: [PullRequestReviewEdge]
+  pageInfo: PageInfo!
+}
+
+type PullRequestReviewEdge {
+  cursor: String!
+  node: PullRequestReview
+}
+
+# O listă filetată de comentarii pentru o cerere de pullRequest dată.
+type PullRequestReviewThread implements Node {
+  # O listă de comentarii de solicitare a tragerii asociate cu firul.
+  comments(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): PullRequestReviewCommentConnection!
+  id: ID!
+
+  # Identifică cererea de pullRequest asociată cu acest fir.
+  pullRequest: PullRequest!
+}
+
+# Stările posibile ale unei cereri de pullRequest.
+enum PullRequestState {
+  # O cerere de pullRequest care este încă deschisă.
+  OPEN
+
+  # O cerere de pullRequest care a fost închisă fără a fi combinată.
+  CLOSED
+
+  # O cerere de pullRequest care a fost închisă prin fuzionare.
+  MERGED
+}
+
+# Rădăcina de interogare a interfeței GraphQL a GitHub.
+type Query {
+  node(id: ID!): Node
+
+  # Căutați noduri după o listă de ID-uri.
+  nodes(
+    # Lista ID-urilor nodului.
+    ids: [ID!]!
+  ): [Node]
+
+  # Hack to workaround https://github.com/facebook/relay/issues/112 re-exposing the root query object
+  relay: Query!
+
+  # Lookup a repository owner (ie. either a User or an Organization) by login.
+  repositoryOwner(
+    # The username to lookup the owner by.
+    login: String!
+  ): RepositoryOwner
+
+  # Efectuați o căutare între resurse.
+  search(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Șirul de căutare de căutat.
+    query: String!
+
+    # Tipurile de articole de căutare în care să căutați.
+    type: SearchType!
+  ): SearchResultItemConnection!
+
+  # Utilizatorul autentificat în prezent.
+  viewer: User!
+}
+
+# Reprezintă un subiect la care se poate reacționa.
+interface Reactable {
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+
+  # Actualizările live de reacție sunt activate pentru acest subiect.
+  liveReactionUpdatesEnabled: Boolean!
+
+  # O listă de reacții grupate după conținutul rămas pe subiect.
+  reactionGroups: [ReactionGroup!]
+
+  # O listă de reacții rămase pe problema.
+  reactions(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea reacțiilor prin emoji.
+    content: ReactionContent
+
+    # Permite specificarea ordinii în care reacțiile sunt returnate.
+    orderBy: ReactionOrder
+  ): ReactionConnection!
+
+  # ID-ul canalului de portal web pentru actualizări live de reacție.
+  reactionsWebsocket: String!
+
+  # Depozitul asociat cu acest subiect de reacție.
+  repository: Repository! @deprecated(reason: "Future reaction subjects may not be scoped under repositories.")
+
+  # Utilizatorul poate reacționa la acest subiect
+  viewerCanReact: Boolean!
+}
+
+# Tipuri care pot avea reacții emoji.
+union ReactableTypes = CommitComment | Issue | IssueComment | PullRequestReviewComment
+
+# O reacție emoji la un anumit conținut.
+type Reaction implements Node {
+  # Identifică reacția emoji.
+  content: ReactionContent!
+
+  # Când s-a creat reacția.
+  createdAt: DateTime!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+  id: ID!
+
+  # Identifică utilizatorul care a creat această reacție.
+  user: User!
+}
+
+# O listă de reacții care au fost lăsate pe subiect.
+type ReactionConnection {
+  edges: [ReactionEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int
+
+  # Dacă utilizatorul autentificat a lăsat sau nu o reacție asupra subiectului.
+  viewerHasReacted: Boolean!
+}
+
+# Emojis care poate fi atașat la Probleme, Solicitări Pull și Comentarii.
+enum ReactionContent {
+  # Represents the 👍 emoji.
+  THUMBS_UP
+
+  # Represents the 👎 emoji.
+  THUMBS_DOWN
+
+  # Represents the 😄 emoji.
+  LAUGH
+
+  # Represents the 🎉 emoji.
+  HOORAY
+
+  # Represents the 😕 emoji.
+  CONFUSED
+
+  # Represents the ❤️ emoji.
+  HEART
+}
+
+type ReactionEdge {
+  cursor: String!
+  node: Reaction
+}
+
+# Un grup de reacții emoji la un anumit conținut.
+type ReactionGroup implements Node {
+  # Identifică reacția emoji.
+  content: ReactionContent!
+
+  # Identifică momentul în care a fost creată reacția.
+  createdAt: DateTime
+  id: ID!
+
+  # O listă a reacțiilor din acest grup.
+  reactions(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): ReactionConnection!
+
+  # Subiectul la care s-a reacționat.
+  subject: ReactableTypes!
+
+  # Dacă utilizatorul autentificat a lăsat sau nu o reacție asupra subiectului.
+  viewerHasReacted: Boolean!
+}
+
+# Modalități prin care listele de reacții pot fi comandate la întoarcere.
+input ReactionOrder {
+  # Domeniul în care să ordonați reacțiile după.
+  field: ReactionOrderField!
+
+  # Direcția în care să ordonați reacțiile după câmpul specificat.
+  direction: OrderDirection!
+}
+
+# O listă de câmpuri prin care reacțiile pot fi ordonate.
+enum ReactionOrderField {
+  # Permite ordonarea unei liste de reacții până când au fost create.
+  CREATED_AT
+}
+
+# Reprezintă o referință Git.
+type Ref implements Node {
+  id: ID!
+
+  # Numele ref.
+  name: String!
+
+  # Prefixul referinței, cum ar fi `refs / heads /` sau `refs / tags /`.
+  prefix: String!
+
+  # Depozitul la care aparține ref.
+  repository: Repository!
+
+  # Obiectul către care indică ref.
+  target: GitObject!
+}
+
+# Reprezintă un eveniment „la care se face referință” pentru o anumită problemă sau o cerere de extragere.
+type ReferencedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică angajamentul asociat evenimentului „la care se face referire”.
+  commit: Commit!
+
+  # Identifică depozitul asociat evenimentului „la care se face referire”.
+  commitRepository: Repository!
+
+  # identifică când a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Tipul de intrare autogenerat al RemoveReaction
+input RemoveReactionInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul nodului subiectului de modificat.
+  subjectId: ID!
+
+  # Numele emojiului cu care să reacționeze.
+  content: ReactionContent!
+}
+
+# Tipul de returnare autogenerat al RemoveReaction
+type RemoveReactionPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  #  Obiectul de reacție.
+  reaction: Reaction!
+}
+
+# Reprezintă un eveniment „redenumit” pentru o anumită problemă sau cerere de extragere sau cerere de extragere.
+type RenamedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+
+  # Identifică titlul actual al problemei sau al cererii de extragere.
+  currentTitle: String!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică titlul anterior al cererii de emisie sau extragere.
+  previousTitle: String!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „redeschis” pentru o anumită problemă sau o cerere de extragere.
+type ReopenedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Un depozit conține conținutul unui proiect.
+type Repository implements Node, ProjectOwner, RepositoryInfo, Subscribable {
+  # O listă de comentarii de confirmare asociate cu depozitul.
+  commitComments(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): CommitCommentConnection!
+
+  # Descrierea depozitului.
+  description: String
+
+  #Descrierea depozitului redat la HTML.
+  descriptionHTML: HTML!
+
+  # O listă de depozite pentru copii.
+  forks(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): RepositoryConnection!
+
+  # Indică dacă depozitul are caracteristica de probleme activată.
+  hasIssuesEnabled: Boolean!
+
+  # Indică dacă depozitul are caracteristica wiki activată.
+  hasWikiEnabled: Boolean!
+
+  # Adresa URL a depozitului.
+  homepageURL: String
+  id: ID!
+
+  # Identifică dacă depozitul este un fork.
+  isFork: Boolean!
+
+  # Indică dacă depozitul a fost blocat sau nu.
+  isLocked: Boolean!
+
+  # Identifică dacă depozitul este o oglindă.
+  isMirror: Boolean!
+
+  # Identifică dacă depozitul este privat.
+  isPrivate: Boolean!
+
+  # O listă de probleme care au fost deschise în depozit.
+  issues(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # O listă de stări după care se filtrează problemele.
+    states: [IssueState!]
+  ): IssueConnection!
+
+  # O listă de etichete asociate depozitului.
+  labels(
+    # Returnează primele _n_ elemente din listă.
+	first: Int
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): LabelConnection
+
+  # Motivul pentru care depozitul a fost blocat.
+  lockReason: RepositoryLockReason
+
+  # O listă de utilizatori care pot fi menționați în contextul depozitului.
+  mentionableUsers(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): UserConnection!
+
+  # O listă de repere asociate cu depozitul.
+  milestones(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): MilestoneConnection
+
+  # Adresa URL oglindă originală a depozitului.
+  mirrorURL: String
+
+  # Numele depozitului.
+  name: String!
+
+  # A Git object in the repository
+  object(
+    # The Git object ID
+    oid: GitObjectID
+
+    # O expresie de revizuire Git potrivită pentru rev-parse
+    expression: String
+  ): GitObject
+
+  # Utilizatorul proprietar al depozitului.
+  owner: RepositoryOwner!
+
+  # Parintele depozit, dacă acesta este un fork.
+  parent: Repository
+
+  # Găsiți proiectul după număr.
+  project(
+    # Numărul proiectului de găsit.
+    number: Int!
+  ): Project
+
+  # O listă de proiecte sub proprietar.
+  projects(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): ProjectConnection
+
+  # O listă de cereri de extragere care au fost deschise în depozit.
+  pullRequests(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # O listă de stări prin care se filtrează solicitările de extragere.
+    states: [PullRequestState!]
+  ): PullRequestConnection!
+
+  # Aduceți o ramură dată din depozit
+  ref(
+    # Numele sucursalei cu refs / heads / prefix
+    qualifiedName: String!
+  ): Ref
+
+  # O listă a utilizatorilor care au marcat cu stea acest depozit.
+  stargazers(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Comandă pentru conectare
+    orderBy: StarOrder
+  ): StargazerConnection!
+
+  # Poate vizualizatorul actual să creeze proiecte noi pentru acest proprietar.
+  viewerCanCreateProjects: Boolean!
+
+  # Verificați dacă vizualizatorul poate schimba starea abonamentului.
+  viewerCanSubscribe: Boolean!
+
+  # Returnează un boolean care indică dacă utilizatorul care vizionează a marcat cu stea acest depozit.
+  viewerHasStarred: Boolean!
+
+  # Identifică dacă privitorul urmărește, nu urmărește sau ignoră.
+  viewerSubscription: SubscriptionState
+
+  # O listă de utilizatori care urmăresc depozitul.
+  watchers(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): UserConnection!
+}
+
+# O listă de depozite care sunt conectate la părinte.
+type RepositoryConnection {
+  edges: [RepositoryEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int
+}
+
+type RepositoryEdge {
+  cursor: String!
+  node: Repository
+}
+
+# Un subset de informații despre depozit.
+interface RepositoryInfo {
+  # Descrierea depozitului.
+  description: String
+
+  # Descrierea depozitului redat la HTML.
+  descriptionHTML: HTML!
+
+  # Indică dacă depozitul are caracteristica de probleme activată.
+  hasIssuesEnabled: Boolean!
+
+  # Indică dacă depozitul are caracteristica wiki activată.
+  hasWikiEnabled: Boolean!
+
+  # Adresa URL a depozitului.
+  homepageURL: String
+
+  # Identifică dacă depozitul este un fork.
+  isFork: Boolean!
+
+  # Indică dacă depozitul a fost blocat sau nu.
+  isLocked: Boolean!
+
+  # Identifică dacă depozitul este o oglindă.
+  isMirror: Boolean!
+
+  # Identifică dacă depozitul este privat.
+  isPrivate: Boolean!
+
+  # Motivul pentru care depozitul a fost blocat.
+  lockReason: RepositoryLockReason
+
+  # Adresa URL oglindă originală a depozitului.
+  mirrorURL: String
+
+  # Numele depozitului.
+  name: String!
+
+  # Utilizatorul proprietar al depozitului.
+  owner: RepositoryOwner!
+}
+
+# O invitație pentru ca un utilizator să fie adăugat la un depozit.
+type RepositoryInvitation implements Node {
+  id: ID!
+
+  # Utilizatorul care a primit invitația.
+  invitee: User!
+
+  # Utilizatorul care a creat invitația.
+  inviter: User!
+
+  # Depozitul la care este invitat utilizatorul.
+  repository: RepositoryInvitationRepository!
+}
+
+# Un subset de informații despre depozit distribuite potențialilor colaboratori.
+type RepositoryInvitationRepository implements RepositoryInfo {
+  # Descrierea depozitului.
+  description: String
+
+  # Descrierea depozitului redat la HTML.
+  descriptionHTML: HTML!
+
+  # Indică dacă depozitul are caracteristica de probleme activată.
+  hasIssuesEnabled: Boolean!
+
+  # Indică dacă depozitul are caracteristica wiki activată.
+  hasWikiEnabled: Boolean!
+
+  # Adresa URL a depozitului.
+  homepageURL: String
+
+  # Identifică dacă depozitul este un fork.
+  isFork: Boolean!
+
+  # Indică dacă depozitul a fost blocat sau nu.
+  isLocked: Boolean!
+
+  # Identifică dacă depozitul este o oglindă.
+  isMirror: Boolean!
+
+  # Identifică dacă depozitul este privat.
+  isPrivate: Boolean!
+
+  # Motivul pentru care depozitul a fost blocat.
+  lockReason: RepositoryLockReason
+
+  # Adresa URL oglindă originală a depozitului.
+  mirrorURL: String
+
+  # Numele depozitului.
+  name: String!
+
+  # Utilizatorul proprietar al depozitului.
+  owner: RepositoryOwner!
+}
+
+# Posibilele motive pentru care un anumit depozit ar putea fi într-o stare blocată.
+enum RepositoryLockReason {
+  # Depozitul este blocat din cauza unei mutări.
+  MOVING
+
+  # Depozitul este blocat din cauza unui motiv legat de facturare.
+  BILLING
+
+  # Depozitul este blocat din cauza unei redenumiri.
+  RENAME
+
+  # Depozitul este blocat din cauza unei migrări.
+  MIGRATING
+}
+
+# Reprezintă un proprietar al unui depozit.
+interface RepositoryOwner {
+  # O adresă URL care indică avatarul public al proprietarului.
+  avatarURL: String!
+  id: ID!
+
+  # Numele de utilizator utilizat pentru autentificare.
+  login: String!
+
+  # O listă de depozite pe care le deține utilizatorul.
+  repositories(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): RepositoryConnection!
+
+  # Găsiți depozitul.
+  repository(
+    # Numele depozitului de găsit.
+    name: String!
+  ): Repository
+}
+
+# Rezultatele unei căutări.
+union SearchResultItem = Issue | PullRequest | Repository | User | Organization
+
+#O listă de rezultate care se potrivesc cu o interogare de căutare.
+type SearchResultItemConnection {
+  # Numărul de bucăți de cod care s-au potrivit cu interogarea de căutare.
+  codeCount: Int!
+  edges: [SearchResultItemEdge]
+
+  # Numărul de probleme care s-au potrivit cu interogarea de căutare.
+  issueCount: Int!
+  pageInfo: PageInfo!
+
+  # Numărul de depozite care s-au potrivit cu interogarea de căutare.
+  repositoryCount: Int!
+
+  # Numărul de utilizatori care s-au potrivit cu interogarea de căutare.
+  userCount: Int!
+
+  # Numărul de pagini wiki care s-au potrivit cu interogarea de căutare.
+  wikiCount: Int!
+}
+
+type SearchResultItemEdge {
+  cursor: String!
+  node: SearchResultItem
+}
+
+# Reprezintă rezultatele individuale ale unei căutări.
+enum SearchType {
+  # Returnează rezultatele care corespund problemelor din depozite.
+  ISSUE
+
+  # Returnează rezultatele care se potrivesc cu depozitele.
+  REPOSITORY
+
+  # Returnează rezultatele care corespund utilizatorilor de pe GitHub.
+  USER
+}
+
+type StargazerConnection {
+  edges: [StargazerEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int!
+}
+
+type StargazerEdge {
+  cursor: String!
+  node: User!
+  starredAt: DateTime!
+}
+
+# Modalități prin care pot fi comandate conexiunile în stea.
+input StarOrder {
+  # Câmpul în care să ordonați nodurile.
+  field: StarOrderField!
+
+  # Direcția în care se comandă nodurile.
+  direction: OrderDirection!
+}
+
+# Proprietăți după care pot fi comandate conexiunile în stea.
+enum StarOrderField {
+  # Permite comanda unei liste de stele după momentul în care au fost create.
+  STARRED_AT
+}
+
+# Un tip care poate fi marcat cu stea
+union StarrableTypes = Repository
+
+type StarredRepositoryConnection {
+  edges: [StarredRepositoryEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int
+}
+
+type StarredRepositoryEdge {
+  cursor: String!
+  node: Repository!
+  starredAt: DateTime!
+}
+
+# Reprezintă un statut de confirmare.
+type Status implements Node {
+  # Comitetul la care este atribuit acest statut.
+  commit: Commit
+
+  # Căutați un context de stare individual după nume de context.
+  context(
+    # Numele contextului.
+    name: String!
+  ): StatusContext
+
+  # Contextele individuale ale statutului pentru această comitere.
+  contexts: [StatusContext!]!
+  id: ID!
+
+  # Statutul de comitere combinat.
+  state: StatusState!
+}
+
+# Reprezintă un context individual al stării de validare
+type StatusContext implements Node {
+  # Aplicația care a creat acest context de stare, dacă există.
+  application: OauthApplication
+
+  # Această comitere este atașată acestui context de stare.
+  commit: Commit
+
+  # Numele acestui context de stare.
+  context: String!
+
+  # Când a fost creat acest context de stare.
+  createdAt: DateTime
+
+  # Utilizatorul care a creat acest context de stare.
+  creator: User
+
+  # Descrierea acestui context de stare.
+  description: String
+  id: ID!
+
+  # Starea contextului acestui statut.
+  state: StatusState!
+
+  # Adresa URL pentru acest context de stare.
+  targetURL: String
+}
+
+# Stările posibile ale statutului de confirmare
+enum StatusState {
+  # Status is expected.
+  EXPECTED
+
+  # Status is errored.
+  ERROR
+
+  # Status is failing.
+  FAILURE
+
+  # Status is pending.
+  PENDING
+
+  # Status is successful.
+  SUCCESS
+}
+
+# Entități la care se poate abona pentru notificări web și prin e-mail.
+interface Subscribable {
+  # Verificați dacă vizualizatorul poate schimba starea abonamentului.
+  viewerCanSubscribe: Boolean!
+
+  # Identifică dacă privitorul urmărește, nu urmărește sau ignoră.
+  viewerSubscription: SubscriptionState
+}
+
+# Reprezintă un eveniment „abonat” pentru o anumită problemă sau o cerere de pullRequest.
+type SubscribedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  #Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Stările posibile ale unui abonament.
+enum SubscriptionState {
+  # Utilizatorul este notificat numai atunci când participă sau @ menționează.
+  UNSUBSCRIBED
+
+  # Utilizatorul este informat despre toate conversațiile.
+  SUBSCRIBED
+
+  # Utilizatorul nu este niciodată notificat.
+  IGNORED
+}
+
+# Reprezintă o etichetă Git.
+type Tag implements Node, GitObject {
+  id: ID!
+
+  # Mesajul etichetei Git
+  message: String!
+
+  # Numele etichetei Git
+  name: String!
+
+  # ID-ul obiectului Git
+  oid: GitObjectID!
+
+  # Depozitul de care aparține obiectul Git
+  repository: Repository!
+
+  # Git obiectează spre care indică eticheta
+  target: GitObject!
+}
+
+# Reprezintă toate evenimentele vizibile pentru un utilizator dintr-o cronologie Issue sau PullRequest.
+interface Timeline {
+  # O listă de evenimente asociate cu o problemă sau PullRequest.
+  timeline(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Permite filtrarea evenimentelor cronologiei după un timestamp `since`.
+    since: String
+  ): IssueEventTypesConnection
+}
+
+# Reprezintă un copac Git.
+type Tree implements Node, GitObject {
+  # O listă de intrări în arbore.
+  entries: [TreeEntry!]
+  id: ID!
+
+  # ID-ul obiectului Git
+  oid: GitObjectID!
+
+  # Depozitul de care aparține obiectul Git
+  repository: Repository!
+}
+
+# Reprezintă o intrare în arbore Git.
+type TreeEntry {
+  # Mod fișier intrare.
+  mode: Int!
+
+  # Numele fișierului de intrare.
+  name: String!
+
+  # Obiect fișier intrare.
+  object: GitObject!
+
+  # Fișier de intrare ID obiect Git.
+  oid: GitObjectID!
+
+  # Depozitul căruia îi aparține intrarea în copac
+  repository: Repository!
+
+  # Tipul de fișier de intrare.
+  type: String!
+}
+
+# Reprezintă un eveniment „neatribuit” pentru o anumită problemă sau Pull
+cerere.
+type UnassignedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică utilizatorul care a efectuat evenimentul „neatribuit”.
+  subject: User!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă o semnătură necunoscută pe un comitet sau o etichetă.
+type UnknownSignature implements GitSignature {
+  # E-mail folosit pentru semnarea acestui obiect.
+  email: String!
+
+  # Adevărat dacă semnătura este validă și verificată de GitHub.
+  isValid: Boolean!
+
+  # Sarcina utilă pentru obiectul de semnare GPG. Obiect ODB brut fără antetul semnăturii.
+  payload: String!
+
+  # Antet de semnătură blindat ASCII din obiect.
+  signature: String!
+
+  # Utilizator GitHub corespunzător e-mailului care semnează acest commit.
+  signer: User
+
+  # Starea acestei semnături. „VALABIL” dacă semnătura este validă și verificată de
+  # GitHub, în ​​caz contrar, reprezintă motivul pentru care semnătura este considerată invalidă.
+  state: GitSignatureState!
+}
+
+  # Reprezintă un eveniment „neetichetat” pentru o anumită problemă sau cerere de extragere.
+type UnlabeledEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică eticheta asociată evenimentului „fără etichetă”.
+  label: Label!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „deblocat” pentru o anumită problemă sau o cerere Pull.
+type UnlockedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Reprezintă un eveniment „dezabonat” pentru o anumită problemă sau cerere Pull.
+type UnsubscribedEvent implements Node, IssueEvent {
+  # Identifică actorul (utilizatorul) asociat evenimentului.
+  actor: User!
+
+  # Identifică momentul în care a fost creat evenimentul.
+  createdAt: DateTime!
+  id: ID!
+
+  # Identifică problema asociată evenimentului.
+  issue: Issue!
+
+  # Identifică depozitul asociat evenimentului.
+  repository: Repository!
+
+  # Identifică tipul de eveniment asociat evenimentului.
+  type: IssueEventType!
+}
+
+# Tipul de intrare autogenerat al UpdateProjectCard
+input UpdateProjectCardInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul ProjectCard de actualizat.
+  projectCardId: ID!
+
+  # Nota ProjectCard.
+  note: String!
+}
+
+# Tipul de returnare autogenerat al UpdateProjectCard
+type UpdateProjectCardPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  #Actualizat ProjectCard.
+  projectCard: ProjectCard!
+}
+
+# Tipul de intrare autogenerat al UpdateProjectColumn
+input UpdateProjectColumnInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul ProjectColumn de actualizat.
+  projectColumnId: ID!
+
+  # Numele coloanei proiectului.
+  name: String!
+}
+
+# Tipul de returnare autogenerat al UpdateProjectColumn
+type UpdateProjectColumnPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Coloana proiectului actualizată.
+  projectColumn: ProjectColumn!
+}
+
+# Tipul de intrare autogenerat al UpdateProject
+input UpdateProjectInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul proiectului de actualizat.
+  projectId: ID!
+
+  # Numele proiectului.
+  name: String!
+
+  # Descrierea proiectului.
+  body: String
+}
+
+# Tipul de returnare autogenerat al UpdateProject
+type UpdateProjectPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Proiectul actualizat.
+  project: Project!
+}
+
+# Tipul de intrare autogenerat al UpdateSubscription
+input UpdateSubscriptionInput {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # ID-ul nodului obiectului abonabil de modificat.
+  subscribableId: ID!
+
+  # Noua stare a abonamentului.
+  state: SubscriptionState!
+}
+
+# Tipul de returnare autogenerat al UpdateSubscription
+type UpdateSubscriptionPayload {
+  # Un identificator unic pentru clientul care efectuează mutația.
+  clientMutationId: String
+
+  # Entitatea abonabilă de intrare.
+  subscribable: Subscribable!
+}
+
+# Un șir URI conform RFC 3986, RFC 3987 și RFC 6570 (nivelul 4).
+scalar URI
+
+# Un utilizator este contul unei persoane pe GitHub care deține depozite și poate crea conținut nou.
+type User implements Node, RepositoryOwner {
+  # O adresă URL care indică avatarul public al utilizatorului.
+  avatarURL(
+    # Dimensiunea imaginii pătrate rezultate.
+    size: Int
+  ): String!
+
+  # Biografia profilului public al utilizatorului.
+  bio: String
+
+  # Compania de profil public a utilizatorului.
+  company: String
+
+  # O listă de depozite la care utilizatorul a contribuit recent.
+  contributedRepositories(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): RepositoryConnection!
+
+  # Când acest utilizator s-a înscris.
+  createdAt: DateTime!
+
+  # Identifică cheia primară din baza de date.
+  databaseId: Int @deprecated(reason: "Raw database IDs should be exposed with caution.")
+
+  # E-mailul profilului public al utilizatorului.
+  email: String
+
+  # Urmează o listă de utilizatori de care este dat utilizatorul.
+  followers(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): UserConnection!
+
+  # O listă de utilizatori pe care urmează utilizatorul dat.
+  following(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): UserConnection!
+  id: ID!
+
+  # Indiferent dacă acest utilizator este sau nu participant la GitHub Security Bug Bounty.
+  isBountyHunter: Boolean!
+
+  # Dacă acest utilizator este sau nu membru al Programului pentru dezvoltatori GitHub.
+  isDeveloperProgramMember: Boolean!
+
+  # Dacă acest utilizator este sau nu angajat GitHub.
+  isEmployee: Boolean!
+
+  # Dacă acest utilizator este sau nu administrator de site.
+  isSiteAdmin: Boolean!
+
+  # Dacă acest utilizator este sau nu utilizatorul care vizionează.
+  isViewer: Boolean!
+
+  # Locația profilului public al utilizatorului.
+  location: String
+
+  # Numele de utilizator utilizat pentru autentificare.
+  login: String!
+
+  # Numele profilului public al utilizatorului.
+  name: String
+
+  # O listă a organizațiilor de care aparține utilizatorul.
+  organizations(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): OrganizationConnection!
+
+  # O listă de cereri Pull asociate acestui utilizator.
+  pullRequests(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): PullRequestConnection!
+
+  # O listă de depozite pe care le deține utilizatorul.
+  repositories(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): RepositoryConnection!
+
+  # Find Repository.
+  repository(
+    # Name of Repository to find.
+    name: String!
+  ): Repository
+
+  # Repositories pe care utilizatorul le-a marcat.
+  starredRepositories(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+
+    # Filtrele au marcat cu stele depozite pentru a returna numai depozite deținute de vizualizator.
+    ownedByViewer: Boolean
+
+    # Comandă pentru conectare
+    orderBy: StarOrder
+  ): StarredRepositoryConnection!
+
+  # Indiferent dacă spectatorul poate sau nu să urmărească utilizatorul.
+  viewerCanFollow: Boolean!
+
+  # Dacă acest utilizator este sau nu urmat de vizualizator.
+  viewerIsFollowing: Boolean!
+
+  # O listă de depozite pe care utilizatorul dat le urmărește.
+  watching(
+    # Returnează primele _n_ elemente din listă.
+    first: Int
+
+    # Returnează elementele din listă care vin după ID-ul global specificat.
+    after: String
+
+    # Returnează ultimele _n_ elemente din listă.
+    last: Int
+
+    # Returnează elementele din listă care vin înainte de ID-ul global specificat.
+    before: String
+  ): RepositoryConnection!
+
+  # O adresă URL care indică site-ul / blogul public al utilizatorului.
+  websiteURL: String
+}
+
+# O listă de utilizatori conectați la părinte.
+type UserConnection {
+  edges: [UserEdge]
+  pageInfo: PageInfo!
+
+  # Identifică numărul total de articole din conexiune.
+  totalCount: Int
+}
+
+type UserEdge {
+  cursor: String!
+  node: User
+}
